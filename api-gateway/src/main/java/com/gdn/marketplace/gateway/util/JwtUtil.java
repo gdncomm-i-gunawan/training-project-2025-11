@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.util.Date;
 import java.util.function.Function;
 
 @Component
@@ -18,7 +17,7 @@ public class JwtUtil {
     private String secret;
 
     public void validateToken(String token) {
-        Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
+        Jwts.parser().setSigningKey(getSigningKey()).build().parseClaimsJws(token);
     }
 
     public String getUsername(String token) {
@@ -31,7 +30,7 @@ public class JwtUtil {
     }
 
     private Claims getAllClaims(String token) {
-        return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody();
     }
 
     private Key getSigningKey() {
