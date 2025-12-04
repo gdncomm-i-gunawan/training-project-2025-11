@@ -9,18 +9,19 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: marketplace_db
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
   mongo:
-    image: mongo:6.0
+    image: mongo:8.0
     container_name: marketplace-mongo
     environment:
       MONGO_INITDB_ROOT_USERNAME: user
       MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: marketplace_db
     ports:
-      - "27017:27017"
+      - "27018:27017"
     volumes:
       - mongo_data:/data/db
 
@@ -28,7 +29,7 @@ services:
     image: redis:7-alpine
     container_name: marketplace-redis
     ports:
-      - "6379:6379"
+      - "6380:6379"
     volumes:
       - redis_data:/data
 

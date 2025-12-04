@@ -57,7 +57,7 @@ class AuthenticationFilterTest {
         ReflectionTestUtils.setField(authenticationFilter, "redisTemplate", redisTemplate);
 
         when(exchange.getRequest()).thenReturn(request);
-//        when(exchange.getResponse()).thenReturn(response);
+
     }
 
     @Test
@@ -66,6 +66,7 @@ class AuthenticationFilterTest {
         when(request.getHeaders()).thenReturn(new HttpHeaders());
         when(response.setStatusCode(HttpStatus.UNAUTHORIZED)).thenReturn(true);
         when(response.setComplete()).thenReturn(Mono.empty());
+        when(exchange.getResponse()).thenReturn(response);
 
         Mono<Void> result = authenticationFilter.apply(new AuthenticationFilter.Config()).filter(exchange, chain);
 
