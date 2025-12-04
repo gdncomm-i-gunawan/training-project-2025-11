@@ -35,11 +35,8 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Page<Product>> searchProducts(
-            @RequestParam String q,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(productService.searchProducts(q, pageable));
+    public ResponseEntity<java.util.List<com.gdn.marketplace.product.document.ProductDocument>> searchProducts(
+            @RequestParam String q) {
+        return ResponseEntity.ok(productService.searchProducts(q));
     }
 }

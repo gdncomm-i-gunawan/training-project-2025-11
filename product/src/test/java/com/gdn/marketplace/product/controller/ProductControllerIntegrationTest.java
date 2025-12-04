@@ -29,6 +29,9 @@ public class ProductControllerIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @org.springframework.boot.test.mock.mockito.MockBean
+    private com.gdn.marketplace.product.repository.ProductSearchRepository productSearchRepository;
+
     @BeforeEach
     void setUp() {
         productRepository.deleteAll();
@@ -49,14 +52,16 @@ public class ProductControllerIntegrationTest {
 
     @Test
     void searchProducts_ShouldReturnList() throws Exception {
-        Product product = new Product();
-        product.setName("Searchable Product");
-        product.setPrice(300.0);
-        productRepository.save(product);
+        com.gdn.marketplace.product.document.ProductDocument doc = new com.gdn.marketplace.product.document.ProductDocument();
+        doc.setName("Searchable Product");
+        doc.setPrice(300.0);
+
+        org.mockito.Mockito.when(productSearchRepository.findByNameContaining(org.mockito.ArgumentMatchers.anyString()))
+                .thenReturn(java.util.Collections.singletonList(doc));
 
         mockMvc.perform(get("/api/product/search")
                 .param("q", "Searchable"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content[0].name").value("Searchable Product"));
+                .andExpect(jsonPath("$[0].name").value("Searchable Product"));
     }
 }

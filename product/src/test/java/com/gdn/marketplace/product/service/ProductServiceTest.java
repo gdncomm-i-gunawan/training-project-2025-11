@@ -8,10 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-
 import java.util.Collections;
 import java.util.Optional;
 
@@ -24,6 +20,9 @@ class ProductServiceTest {
 
     @Mock
     private ProductRepository productRepository;
+
+    @Mock
+    private com.gdn.marketplace.product.repository.ProductSearchRepository productSearchRepository;
 
     @InjectMocks
     private ProductService productService;
@@ -46,6 +45,7 @@ class ProductServiceTest {
 
         assertNotNull(result);
         assertEquals("Test Product", result.getName());
+        verify(productSearchRepository, times(1)).save(any(com.gdn.marketplace.product.document.ProductDocument.class));
     }
 
     @Test
@@ -60,12 +60,17 @@ class ProductServiceTest {
 
     @Test
     void searchProducts_Success() {
-        Page<Product> page = new PageImpl<>(Collections.singletonList(product));
-        when(productRepository.findByNameContainingIgnoreCase(anyString(), any(Pageable.class))).thenReturn(page);
+        com.gdn.marketplace.product.document.ProductDocument doc = new com.gdn.marketplace.product.document.ProductDocument();
+        doc.setId("1");
+        doc.setName("Test Product");
 
-        Page<Product> result = productService.searchProducts("Test", Pageable.unpaged());
+        when(productSearchRepository.findByNameContaining(anyString())).thenReturn(Collections.singletonList(doc));
+
+        java.util.List<com.gdn.marketplace.product.document.ProductDocument> result = productService
+                .searchProducts("Test");
 
         assertNotNull(result);
-        assertEquals(1, result.getTotalElements());
+        assertEquals(1, result.size());
+        assertEquals("Test Product", result.get(0).getName());
     }
 }

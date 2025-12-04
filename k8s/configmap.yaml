@@ -10,4 +10,6 @@ data:
   mongo-host: mongo
   mongo-port: "27018"
   redis-host: redis
-  redis-port: "6380"
+  redis-port: "6379"
+  elasticsearch-host: elasticsearch
+  elasticsearch-port: "9200"
